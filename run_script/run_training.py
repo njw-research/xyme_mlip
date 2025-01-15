@@ -8,18 +8,16 @@ from functools import partial
 from absl import logging, app, flags
 import haiku.experimental.flax as hkflax
 
-from src.utils.base import param_count, initialize_training
-from src.utils.setup_logging import setup_logging
+from src.utils.base import initialize_training
 from src.utils.checkpoint.checkpoint_utils import find_highest_train_directory
 from src.utils.checkpoint.checkpoint_state import restore_or_initialize_state
 from src.utils.data.load_data import load_and_prepare_datasets
 from src.utils.containers import Graph
-from src.train.optimizer.optimizer import OptimizerConfig
+from src.train.optimizer.optimizer import get_optimizer
 from src.train.scan.run_scan import run_scan
 from src.train.pmap.run_pmap import run_pmap
 from src.mlip.message_passing import MessagePassing
 from src.train.loss.loss import loss_fn_apply
-
 
 # Define flags 
 FLAGS = flags.FLAGS
@@ -43,18 +41,8 @@ flags.DEFINE_string('data_dir', './data/', 'Directory for datasets.')
 flags.DEFINE_string('dataset', 'md17_ethanol.npz', 'Name of the dataset file.')  #md17_ethanol.npz
 
 # Dynamic optimization parmaters 
-flags.DEFINE_float('init_lr', 1e-4, 'Initial learning rate.')
-flags.DEFINE_float('peak_lr', 2e-3, 'Peak learning rate for the schedule.')
-flags.DEFINE_float('end_lr', 1e-4, 'End learning rate for the schedule.')
-flags.DEFINE_string('optimizer_name', 'adam', 'Optimizer to use for training.')
-flags.DEFINE_bool('use_schedule', False, 'Whether to use a learning rate schedule.')
-flags.DEFINE_integer('warmup_n_epoch', 30, 'Number of epochs for learning rate warmup.')
-flags.DEFINE_float('max_global_norm', None, 'Maximum global norm for gradient clipping (None for no clipping).')
-flags.DEFINE_float('max_param_grad', None, 'Maximum parameter gradient (None for no gradient clipping).')
-flags.DEFINE_bool('dynamic_grad_ignore_and_clip', True, 'Whether to ignore or clip gradients dynamically.')
-flags.DEFINE_float('dynamic_grad_ignore_factor', 5., 'Factor above which to fully ignore the gradient.')
-flags.DEFINE_float('dynamic_grad_norm_factor', 2., 'Factor above which to clip the gradient norm.')
-flags.DEFINE_integer('dynamic_grad_norm_window', 20, 'Window size to track median gradient norm over.')
+flags.DEFINE_float('learning_rate', 1e-4, 'Learning rate.')
+flags.DEFINE_float('gradient_clipping', 1000, 'Max norm graident.')
 
 # Model hyperparameters
 flags.DEFINE_integer('num_features', 8, 'Number of features')
@@ -99,27 +87,6 @@ def preface():
         FLAGS.num_train, 
         FLAGS.num_valid
     )
-
-    # Creating OptimizerConfig instance using flag values
-    optimizer_config = OptimizerConfig(
-        init_lr=FLAGS.init_lr,
-        end_lr=FLAGS.end_lr,
-        dynamic_grad_ignore_and_clip=True
-    )
-
-# # Initialize training process and directories
-# def initialize_training(start_epoch, state, script_dir):
-#     if start_epoch >= FLAGS.num_epochs:
-#         print(f"Training already completed. Exiting. start_epoch: {start_epoch}, num_epochs: {FLAGS.num_epochs}")
-#         sys.exit(0)
-
-#     # Create directory for saving training checkpoints and set up logging
-#     train_dir = create_training_directory(script_dir)
-#     save_checkpoint_path = os.path.join(train_dir, FLAGS.checkpoint_dir)
-#     setup_logging(train_dir, FLAGS.logging_filename)
-#     logging.info(f"Starting epoch: {start_epoch}, params count: {param_count(state.params)}")
-
-#     return save_checkpoint_path
     
 
 def main(argv):
@@ -143,7 +110,9 @@ def main(argv):
         mod = hkflax.lift(message_passing, name=f'e3x_mlip')
         return mod(graph.features, graph.positions)
 
-    opt = optax.adam(1e-3)
+    opt = get_optimizer(FLAGS.learning_rate, FLAGS.gradient_clipping)
+    
+    # = optax.adam(1e-3)
 
     # Restore or initialize the model state
     state, start_epoch = restore_or_initialize_state(
