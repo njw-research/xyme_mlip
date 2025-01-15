@@ -1,0 +1,74 @@
+I0115 13:54:16.742309 8725594688 setup_logging.py:22] Logging all flags:
+I0115 13:54:16.742394 8725594688 setup_logging.py:25] ?: False
+I0115 13:54:16.742420 8725594688 setup_logging.py:25] alsologtostderr: False
+I0115 13:54:16.742437 8725594688 setup_logging.py:25] batch_size: 4
+I0115 13:54:16.742451 8725594688 setup_logging.py:25] checkpoint_dir: ./checkpoint/
+I0115 13:54:16.742462 8725594688 setup_logging.py:25] checkpoint_update_freq: 10
+I0115 13:54:16.742471 8725594688 setup_logging.py:25] checkpointing_enabled: True
+I0115 13:54:16.742480 8725594688 setup_logging.py:25] chex_assert_multiple_cpu_devices: False
+I0115 13:54:16.742489 8725594688 setup_logging.py:25] chex_n_cpu_devices: 1
+I0115 13:54:16.742498 8725594688 setup_logging.py:25] chex_skip_pmap_variant_if_single_device: True
+I0115 13:54:16.742506 8725594688 setup_logging.py:25] cutoff: 5.0
+I0115 13:54:16.742516 8725594688 setup_logging.py:25] data_dir: ./data/
+I0115 13:54:16.742523 8725594688 setup_logging.py:25] dataset: md17_ethanol.npz
+I0115 13:54:16.742532 8725594688 setup_logging.py:25] dynamic_grad_ignore_and_clip: True
+I0115 13:54:16.742540 8725594688 setup_logging.py:25] dynamic_grad_ignore_factor: 5.0
+I0115 13:54:16.742547 8725594688 setup_logging.py:25] dynamic_grad_norm_factor: 2.0
+I0115 13:54:16.742554 8725594688 setup_logging.py:25] dynamic_grad_norm_window: 20
+I0115 13:54:16.742563 8725594688 setup_logging.py:25] end_lr: 0.0001
+I0115 13:54:16.742572 8725594688 setup_logging.py:25] forces_weight: 10.0
+I0115 13:54:16.742579 8725594688 setup_logging.py:25] help: False
+I0115 13:54:16.742587 8725594688 setup_logging.py:25] helpfull: False
+I0115 13:54:16.742596 8725594688 setup_logging.py:25] helpshort: False
+I0115 13:54:16.742604 8725594688 setup_logging.py:25] helpxml: False
+I0115 13:54:16.742611 8725594688 setup_logging.py:25] init_lr: 0.0001
+I0115 13:54:16.742618 8725594688 setup_logging.py:25] last_iter_info_only: False
+I0115 13:54:16.742627 8725594688 setup_logging.py:25] log_dir: 
+I0115 13:54:16.742635 8725594688 setup_logging.py:25] logger_levels: {}
+I0115 13:54:16.742645 8725594688 setup_logging.py:25] logging_filename: ./training.log
+I0115 13:54:16.742652 8725594688 setup_logging.py:25] logtostderr: False
+I0115 13:54:16.742660 8725594688 setup_logging.py:25] max_atomic_number: 9
+I0115 13:54:16.742667 8725594688 setup_logging.py:25] max_degree: 2
+I0115 13:54:16.742674 8725594688 setup_logging.py:25] max_global_norm: None
+I0115 13:54:16.742682 8725594688 setup_logging.py:25] max_param_grad: None
+I0115 13:54:16.742691 8725594688 setup_logging.py:25] num_basis_functions: 16
+I0115 13:54:16.742697 8725594688 setup_logging.py:25] num_epochs: 100
+I0115 13:54:16.742704 8725594688 setup_logging.py:25] num_features: 8
+I0115 13:54:16.742712 8725594688 setup_logging.py:25] num_iterations: 3
+I0115 13:54:16.742721 8725594688 setup_logging.py:25] num_train: 64
+I0115 13:54:16.742727 8725594688 setup_logging.py:25] num_valid: 8
+I0115 13:54:16.742735 8725594688 setup_logging.py:25] only_check_args: False
+I0115 13:54:16.742743 8725594688 setup_logging.py:25] optimizer_name: adam
+I0115 13:54:16.742750 8725594688 setup_logging.py:25] output_keys: ['grad_norm', 'energy_mae', 'forces_mae']
+I0115 13:54:16.742759 8725594688 setup_logging.py:25] pdb: False
+I0115 13:54:16.742768 8725594688 setup_logging.py:25] pdb_post_mortem: False
+I0115 13:54:16.742774 8725594688 setup_logging.py:25] peak_lr: 0.002
+I0115 13:54:16.742783 8725594688 setup_logging.py:25] profile_file: None
+I0115 13:54:16.742789 8725594688 setup_logging.py:25] run_with_pdb: False
+I0115 13:54:16.742798 8725594688 setup_logging.py:25] run_with_profiling: False
+I0115 13:54:16.742805 8725594688 setup_logging.py:25] showprefixforinfo: True
+I0115 13:54:16.742812 8725594688 setup_logging.py:25] stderrthreshold: fatal
+I0115 13:54:16.742821 8725594688 setup_logging.py:25] test_random_seed: 301
+I0115 13:54:16.742828 8725594688 setup_logging.py:25] test_randomize_ordering_seed: 
+I0115 13:54:16.742835 8725594688 setup_logging.py:25] test_srcdir: 
+I0115 13:54:16.742843 8725594688 setup_logging.py:25] test_tmpdir: /var/folders/48/4b3v77352hb1hs_q4d1ynk040000gp/T/absl_testing
+I0115 13:54:16.742859 8725594688 setup_logging.py:25] training_output_dir: ./train_/
+I0115 13:54:16.742865 8725594688 setup_logging.py:25] use_cprofile_for_profiling: True
+I0115 13:54:16.742874 8725594688 setup_logging.py:25] use_schedule: False
+I0115 13:54:16.742881 8725594688 setup_logging.py:25] v: 0
+I0115 13:54:16.742887 8725594688 setup_logging.py:25] verbosity: 0
+I0115 13:54:16.742895 8725594688 setup_logging.py:25] warmup_n_epoch: 30
+I0115 13:54:16.742902 8725594688 setup_logging.py:25] xml_output_file: 
+I0115 13:54:16.921993 8725594688 base.py:30] Starting epoch: 0, params count: 3226
+I0115 13:54:16.922070 8725594688 run_mlip_training.py:173] Training without jax.pmap
+I0115 13:54:23.558926 8725594688 training_scan.py:170] Epoch 10 | grad_norm: 15.0655517578125 | energy_mae: 3.3954 | forces_mae: 20.4225 | valid energy_mae: 3.2950 | valid forces_mae: 20.1415
+I0115 13:54:24.031768 8725594688 training_scan.py:170] Epoch 20 | grad_norm: 2466.37451171875 | energy_mae: 4.7871 | forces_mae: 17.3905 | valid energy_mae: 6.2366 | valid forces_mae: 16.9611
+I0115 13:54:24.509077 8725594688 training_scan.py:170] Epoch 30 | grad_norm: 5847.7099609375 | energy_mae: 4.2291 | forces_mae: 14.1546 | valid energy_mae: 5.4125 | valid forces_mae: 13.2514
+I0115 13:54:24.988037 8725594688 training_scan.py:170] Epoch 40 | grad_norm: 8776.576171875 | energy_mae: 4.2576 | forces_mae: 12.6254 | valid energy_mae: 5.3815 | valid forces_mae: 11.1445
+I0115 13:54:25.460295 8725594688 training_scan.py:170] Epoch 50 | grad_norm: 7394.4833984375 | energy_mae: 4.6032 | forces_mae: 11.2219 | valid energy_mae: 4.3684 | valid forces_mae: 9.7863
+I0115 13:54:25.935770 8725594688 training_scan.py:170] Epoch 60 | grad_norm: 5284.2841796875 | energy_mae: 3.5573 | forces_mae: 10.5048 | valid energy_mae: 3.3715 | valid forces_mae: 9.2215
+I0115 13:54:26.409071 8725594688 training_scan.py:170] Epoch 70 | grad_norm: 8614.0400390625 | energy_mae: 4.8076 | forces_mae: 9.9782 | valid energy_mae: 9.0517 | valid forces_mae: 8.6100
+I0115 13:54:26.881712 8725594688 training_scan.py:170] Epoch 80 | grad_norm: 6738.15185546875 | energy_mae: 4.0468 | forces_mae: 9.4796 | valid energy_mae: 3.5855 | valid forces_mae: 8.1763
+I0115 13:54:27.389704 8725594688 training_scan.py:170] Epoch 90 | grad_norm: 6662.666015625 | energy_mae: 3.2846 | forces_mae: 9.0547 | valid energy_mae: 2.9360 | valid forces_mae: 7.7414
+I0115 13:54:27.862375 8725594688 training_scan.py:170] Epoch 100 | grad_norm: 5095.04150390625 | energy_mae: 2.5979 | forces_mae: 8.5480 | valid energy_mae: 2.1787 | valid forces_mae: 7.3661
+I0115 13:54:27.863386 8725594688 run_scan.py:103] Training completed. Well done!

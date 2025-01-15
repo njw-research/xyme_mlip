@@ -4,4 +4,13 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "absl-py>=2.1.0",
+    "ase>=3.24.0",
+    "dm-haiku>=0.0.13",
+    "e3x>=1.0.2",
+    "flax>=0.10.2",
+    "matplotlib>=3.10.0",
+    "optax>=0.2.4",
+    "tqdm>=4.67.1",
+]
