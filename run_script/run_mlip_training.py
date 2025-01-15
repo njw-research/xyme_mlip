@@ -64,6 +64,10 @@ flags.DEFINE_integer('num_basis_functions', 16, 'Number of basis functions')
 flags.DEFINE_float('cutoff', 5.0, 'Cutoff distance')
 flags.DEFINE_integer('max_atomic_number', 9, 'Maximum atomic number')
 
+
+os.environ["XLA_FLAGS"] = "--xla_force_host_platform_device_count=1"
+
+
 def preface():
     global rng_key, data_key, train_key, init_key, devices, n_devices, pmap_axis_name
     global highest_train_dir, restore_checkpoint_dir, data_rng_key_generator, samples_train, samples_valid, atomic_numbers, n_nodes, optimizer_config
