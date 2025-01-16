@@ -12,7 +12,7 @@ def setup_padded_reshaped_data(data: chex.ArrayTree,
 
     padding_amount = (interval_length - test_set_size % interval_length) % interval_length
     test_data_padded_size = test_set_size + padding_amount
-    test_data_padded = jax.tree_map(
+    test_data_padded = jax.tree.map(
         lambda x: jnp.concatenate([x, jnp.zeros((padding_amount, *x.shape[1:]), dtype=x.dtype)], axis=0), data
     )
     mask = jnp.zeros(test_data_padded_size, dtype=int).at[jnp.arange(test_set_size)].set(1)
@@ -90,7 +90,6 @@ def batchify_array(data: chex.Array, batch_size: int):
 
 def batchify_data(data: chex.ArrayTree, batch_size: int):
     return jax.tree_map(lambda x: batchify_array(x, batch_size), data)
-
 
 def get_leading_axis_tree(tree: chex.ArrayTree, n_dims: int = 1):
     flat_tree, _ = jax.tree_util.tree_flatten(tree)

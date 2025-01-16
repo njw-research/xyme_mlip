@@ -1,12 +1,10 @@
 import chex
-import jax
 import jax.numpy as jnp
 import haiku as hk
-import optax
 from optax._src.transform import ScaleByAdamState
 from absl import logging
 from tqdm import tqdm
-from typing import Callable, Tuple, Optional, List
+from typing import Callable, Tuple, List
 from src.utils.containers import TrainingState
 from src.utils.checkpoint.checkpoint_state import save_state
 

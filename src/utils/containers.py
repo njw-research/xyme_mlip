@@ -1,6 +1,5 @@
-from typing import NamedTuple, Callable, Tuple, Any, Optional, Dict
+from typing import NamedTuple, Any
 import chex
-import haiku as hk
 import optax
 
 class FullGraphSample(NamedTuple):

@@ -6,7 +6,7 @@ import chex
 import optax
 import jax.numpy as jnp
 from src.utils.containers import TrainingState
-from typing import Callable, Tuple, Optional
+from typing import Callable, Tuple
 
 def restore_or_initialize_state(
     key: chex.PRNGKey, 
