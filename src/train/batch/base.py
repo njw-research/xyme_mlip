@@ -91,7 +91,6 @@ def batchify_array(data: chex.Array, batch_size: int):
 def batchify_data(data: chex.ArrayTree, batch_size: int):
     return jax.tree_map(lambda x: batchify_array(x, batch_size), data)
 
-
 def get_leading_axis_tree(tree: chex.ArrayTree, n_dims: int = 1):
     flat_tree, _ = jax.tree_util.tree_flatten(tree)
     leading_shape = flat_tree[0].shape[:n_dims]

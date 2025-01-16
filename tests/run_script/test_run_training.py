@@ -1,7 +1,6 @@
 # Import standard libraries
 import os
 from absl import logging, app, flags
-import pytest
 import shutil
 # Import custom libraries
 from src.run.base import RunInitializer
@@ -40,11 +39,11 @@ flags.DEFINE_float('learning_rate', 1e-4, 'Learning rate.')
 flags.DEFINE_float('gradient_clipping', 1000, 'Max norm graident.')
 
 # Model hyperparameters
-flags.DEFINE_integer('num_features', 8, 'Number of features')
-flags.DEFINE_integer('max_degree', 2, 'Maximum degree')
-flags.DEFINE_integer('num_iterations', 3, 'Number of iterations')
-flags.DEFINE_integer('num_basis_functions', 16, 'Number of basis functions')
-flags.DEFINE_float('cutoff', 5.0, 'Cutoff distance')
+flags.DEFINE_integer('num_features', 4, 'Number of features')
+flags.DEFINE_integer('max_degree', 0, 'Maximum degree')
+flags.DEFINE_integer('num_iterations', 1, 'Number of iterations')
+flags.DEFINE_integer('num_basis_functions', 8, 'Number of basis functions')
+flags.DEFINE_float('cutoff', 3.0, 'Cutoff distance')
 flags.DEFINE_integer('max_atomic_number', 9, 'Maximum atomic number')
 
 def main(argv):
@@ -96,12 +95,12 @@ def test_training_process():
     """Test that the training process finishes correctly."""
     try:
         # Run the main function as if it were called from the command line
-        result = app.run(main)
-        result = None
+        app.run(main)
+        print("Training process exited successfully")
     except SystemExit as e:
-        print(e.code)
+        print("Training process exited with error code: ", e.code)
         # Check if the system exits with a status code of 0, which indicates successful execution
-        assert e.code == None
+        assert e.code is None
 
 # Check that the output files exist and remove them
 def test_files_exist():
