@@ -1,0 +1,64 @@
+I0116 07:45:32.532108 8725594688 setup_logging.py:22] Logging all flags:
+I0116 07:45:32.532209 8725594688 setup_logging.py:25] ?: False
+I0116 07:45:32.532233 8725594688 setup_logging.py:25] alsologtostderr: False
+I0116 07:45:32.532248 8725594688 setup_logging.py:25] batch_size: 4
+I0116 07:45:32.532258 8725594688 setup_logging.py:25] checkpoint_dir: ./checkpoint/
+I0116 07:45:32.532270 8725594688 setup_logging.py:25] checkpoint_update_freq: 10
+I0116 07:45:32.532279 8725594688 setup_logging.py:25] checkpointing_enabled: True
+I0116 07:45:32.532286 8725594688 setup_logging.py:25] chex_assert_multiple_cpu_devices: False
+I0116 07:45:32.532295 8725594688 setup_logging.py:25] chex_n_cpu_devices: 1
+I0116 07:45:32.532305 8725594688 setup_logging.py:25] chex_skip_pmap_variant_if_single_device: True
+I0116 07:45:32.532313 8725594688 setup_logging.py:25] cutoff: 5.0
+I0116 07:45:32.532323 8725594688 setup_logging.py:25] data_dir: ./data/
+I0116 07:45:32.532330 8725594688 setup_logging.py:25] dataset: md17_ethanol.npz
+I0116 07:45:32.532338 8725594688 setup_logging.py:25] forces_weight: 10.0
+I0116 07:45:32.532346 8725594688 setup_logging.py:25] gradient_clipping: 1000.0
+I0116 07:45:32.532355 8725594688 setup_logging.py:25] help: False
+I0116 07:45:32.532364 8725594688 setup_logging.py:25] helpfull: False
+I0116 07:45:32.532371 8725594688 setup_logging.py:25] helpshort: False
+I0116 07:45:32.532380 8725594688 setup_logging.py:25] helpxml: False
+I0116 07:45:32.532388 8725594688 setup_logging.py:25] last_iter_info_only: False
+I0116 07:45:32.532396 8725594688 setup_logging.py:25] learning_rate: 0.0001
+I0116 07:45:32.532407 8725594688 setup_logging.py:25] log_dir: 
+I0116 07:45:32.532417 8725594688 setup_logging.py:25] logger_levels: {}
+I0116 07:45:32.532425 8725594688 setup_logging.py:25] logging_filename: ./training.log
+I0116 07:45:32.532433 8725594688 setup_logging.py:25] logtostderr: False
+I0116 07:45:32.532442 8725594688 setup_logging.py:25] max_atomic_number: 9
+I0116 07:45:32.532449 8725594688 setup_logging.py:25] max_degree: 2
+I0116 07:45:32.532456 8725594688 setup_logging.py:25] num_basis_functions: 16
+I0116 07:45:32.532464 8725594688 setup_logging.py:25] num_epochs: 100
+I0116 07:45:32.532473 8725594688 setup_logging.py:25] num_features: 8
+I0116 07:45:32.532480 8725594688 setup_logging.py:25] num_iterations: 3
+I0116 07:45:32.532487 8725594688 setup_logging.py:25] num_train: 64
+I0116 07:45:32.532495 8725594688 setup_logging.py:25] num_valid: 8
+I0116 07:45:32.532503 8725594688 setup_logging.py:25] only_check_args: False
+I0116 07:45:32.532510 8725594688 setup_logging.py:25] output_keys: ['grad_norm', 'energy_mae', 'forces_mae']
+I0116 07:45:32.532521 8725594688 setup_logging.py:25] pdb: False
+I0116 07:45:32.532528 8725594688 setup_logging.py:25] pdb_post_mortem: False
+I0116 07:45:32.532536 8725594688 setup_logging.py:25] profile_file: None
+I0116 07:45:32.532542 8725594688 setup_logging.py:25] run_with_pdb: False
+I0116 07:45:32.532550 8725594688 setup_logging.py:25] run_with_profiling: False
+I0116 07:45:32.532557 8725594688 setup_logging.py:25] showprefixforinfo: True
+I0116 07:45:32.532566 8725594688 setup_logging.py:25] stderrthreshold: fatal
+I0116 07:45:32.532573 8725594688 setup_logging.py:25] test_random_seed: 301
+I0116 07:45:32.532581 8725594688 setup_logging.py:25] test_randomize_ordering_seed: 
+I0116 07:45:32.532590 8725594688 setup_logging.py:25] test_srcdir: 
+I0116 07:45:32.532597 8725594688 setup_logging.py:25] test_tmpdir: /var/folders/48/4b3v77352hb1hs_q4d1ynk040000gp/T/absl_testing
+I0116 07:45:32.532605 8725594688 setup_logging.py:25] training_output_dir: ./train_/
+I0116 07:45:32.532613 8725594688 setup_logging.py:25] use_cprofile_for_profiling: True
+I0116 07:45:32.532621 8725594688 setup_logging.py:25] v: 0
+I0116 07:45:32.532628 8725594688 setup_logging.py:25] verbosity: 0
+I0116 07:45:32.532635 8725594688 setup_logging.py:25] xml_output_file: 
+I0116 07:45:32.718171 8725594688 base.py:30] Starting epoch: 0, params count: 3226
+I0116 07:45:32.718271 8725594688 run_training.py:148] Training without jax.pmap
+I0116 07:45:39.171807 8725594688 training_scan.py:170] Epoch 10 | grad_norm: 14.147193908691406 | energy_mae: 3.3979 | forces_mae: 20.4235 | valid energy_mae: 3.2949 | valid forces_mae: 20.1436
+I0116 07:45:39.690096 8725594688 training_scan.py:170] Epoch 20 | grad_norm: 9.017791748046875 | energy_mae: 3.3979 | forces_mae: 20.4235 | valid energy_mae: 3.2949 | valid forces_mae: 20.1436
+I0116 07:45:40.216349 8725594688 training_scan.py:170] Epoch 30 | grad_norm: 14.719655990600586 | energy_mae: 3.3975 | forces_mae: 20.4235 | valid energy_mae: 3.2949 | valid forces_mae: 20.1436
+I0116 07:45:40.738885 8725594688 training_scan.py:170] Epoch 40 | grad_norm: 10.397063255310059 | energy_mae: 3.3968 | forces_mae: 20.4235 | valid energy_mae: 3.2949 | valid forces_mae: 20.1436
+I0116 07:45:41.241649 8725594688 training_scan.py:170] Epoch 50 | grad_norm: 13.098917007446289 | energy_mae: 3.3948 | forces_mae: 20.4232 | valid energy_mae: 3.2950 | valid forces_mae: 20.1433
+I0116 07:45:41.775081 8725594688 training_scan.py:170] Epoch 60 | grad_norm: 19.28955841064453 | energy_mae: 3.3883 | forces_mae: 20.4202 | valid energy_mae: 3.2957 | valid forces_mae: 20.1398
+I0116 07:45:42.277403 8725594688 training_scan.py:170] Epoch 70 | grad_norm: 80.26115417480469 | energy_mae: 3.4079 | forces_mae: 20.3840 | valid energy_mae: 3.2832 | valid forces_mae: 20.0976
+I0116 07:45:42.775302 8725594688 training_scan.py:170] Epoch 80 | grad_norm: 417.36749267578125 | energy_mae: 3.8614 | forces_mae: 20.1789 | valid energy_mae: 3.6615 | valid forces_mae: 19.8561
+I0116 07:45:43.274996 8725594688 training_scan.py:170] Epoch 90 | grad_norm: 942.0103759765625 | energy_mae: 3.8861 | forces_mae: 19.8896 | valid energy_mae: 3.3269 | valid forces_mae: 19.4787
+I0116 07:45:43.777649 8725594688 training_scan.py:170] Epoch 100 | grad_norm: 1287.8919677734375 | energy_mae: 3.7550 | forces_mae: 19.5585 | valid energy_mae: 3.8117 | valid forces_mae: 19.0656
+I0116 07:45:43.778697 8725594688 run_scan.py:103] Training completed. Well done!

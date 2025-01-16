@@ -1,11 +1,7 @@
 import chex
 import jax
 import jax.numpy as jnp
-import haiku as hk
-import optax
-from optax._src.transform import ScaleByAdamState
-from tqdm import tqdm
-from typing import Callable, Tuple, Optional
+from typing import Tuple
 from absl import logging
 from functools import partial
 
@@ -13,7 +9,6 @@ from functools import partial
 from src.train.batch.base import get_shuffle_and_batchify_data_fn
 from src.utils.containers import TrainingState
 from src.utils.pmap import get_from_first_device
-from src.utils.checkpoint.checkpoint_state import save_state
 from src.train.pmap.training_pmap import train_pmap
 from src.train.steps.steps import training_step, validation_step
 
@@ -81,6 +76,6 @@ def run_pmap(opt, loss_fn_partial, samples_train, samples_valid,
                checkpoint_update_freq=checkpoint_update_freq,
                output_keys=output_keys,)
 
-    logging.info(f"Training completed. Well done!")
+    logging.info("Training completed. Well done!")
 
     return state

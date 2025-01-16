@@ -2,11 +2,16 @@ import os
 import jax
 import haiku as hk
 
+from src.utils.checkpoint.checkpoint_utils import find_highest_train_directory
+from src.utils.data.load_data import load_and_prepare_datasets
 
-def get_config(data_dir, dataset, num_train, num_valid, checkpoint_dir):
-    global rng_key, data_key, train_key, init_key, devices, n_devices, pmap_axis_name
-    global highest_train_dir, restore_checkpoint_dir, data_rng_key_generator, samples_train, samples_valid, atomic_numbers, n_nodes, optimizer_config
-    
+def get_config(data_dir: str, 
+               dataset: str, 
+               checkpoint_dir: str,
+               num_train: int, 
+               num_valid: int
+               ):
+
     # Initialize random number generator (RNG) keys for reproducibility
     rng_key, data_key, train_key, init_key = jax.random.split(jax.random.PRNGKey(0), 4)
 
@@ -35,7 +40,7 @@ def get_config(data_dir, dataset, num_train, num_valid, checkpoint_dir):
         num_valid  # Passed from arguments
     )
 
-    return {
+    config_dict = {
         'rng_key': rng_key,
         'data_key': data_key,
         'train_key': train_key,
@@ -48,6 +53,7 @@ def get_config(data_dir, dataset, num_train, num_valid, checkpoint_dir):
         'data_rng_key_generator': data_rng_key_generator,
         'samples_train': samples_train,
         'samples_valid': samples_valid,
-        'atomic_numbers': atomic_numbers,
-        'n_nodes': n_nodes
-    }
+        'atomic_numbers': atomic_numbers
+        }
+
+    return  config_dict, n_devices

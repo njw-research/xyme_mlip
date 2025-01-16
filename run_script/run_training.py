@@ -1,13 +1,12 @@
 # Import standard libraries
-import sys
 import os
 import jax
 import haiku as hk
-import optax
 from functools import partial
 from absl import logging, app, flags
 import haiku.experimental.flax as hkflax
 
+from src.run.base import get_config
 from src.utils.base import initialize_training
 from src.utils.checkpoint.checkpoint_utils import find_highest_train_directory
 from src.utils.checkpoint.checkpoint_state import restore_or_initialize_state
@@ -55,43 +54,15 @@ flags.DEFINE_integer('max_atomic_number', 9, 'Maximum atomic number')
 
 os.environ["XLA_FLAGS"] = "--xla_force_host_platform_device_count=1"
 
-
-def preface():
-    global rng_key, data_key, train_key, init_key, devices, n_devices, pmap_axis_name
-    global highest_train_dir, restore_checkpoint_dir, data_rng_key_generator, samples_train, samples_valid, atomic_numbers, n_nodes, optimizer_config
-    
-    # Initialize random number generator (RNG) keys for reproducibility
-    rng_key, data_key, train_key, init_key = jax.random.split(jax.random.PRNGKey(0), 4)
-
-    # Get available JAX devices (e.g., GPUs)
-    devices = jax.devices()
-    n_devices = len(devices)
-    pmap_axis_name = 'data'
-    print("Current JAX device:", devices)
-    print("Number of devices found: ", n_devices)
-
-    # Find the highest training directory for resuming training
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    highest_train_dir = find_highest_train_directory(script_dir)
-    restore_checkpoint_dir = os.path.join(highest_train_dir, FLAGS.checkpoint_dir) if highest_train_dir else None
-
-    # Data RNG key sequence for shuffling
-    data_rng_key_generator = hk.PRNGSequence(42)
-
-    # Load training and validation datasets
-    samples_train, samples_valid, atomic_numbers, n_nodes = load_and_prepare_datasets(
-        script_dir, 
-        data_key, 
-        FLAGS.data_dir, 
-        FLAGS.dataset, 
-        FLAGS.num_train, 
-        FLAGS.num_valid
-    )
-    
-
 def main(argv):
-    # Call preface to initialize variables
-    preface()
+
+    config, n_devices = get_config(
+        FLAGS.data_dir,
+        FLAGS.dataset,
+        FLAGS.checkpoint_dir,
+        FLAGS.num_train,
+        FLAGS.num_valid
+        )
 
     # Instantiate the message-passing model
     message_passing = MessagePassing(
@@ -106,22 +77,21 @@ def main(argv):
     # Define energy and force computation with Haiku model transformation
     @hk.without_apply_rng
     @hk.transform
-    def energy_and_forces_vmap(graph: Graph):
-        mod = hkflax.lift(message_passing, name=f'e3x_mlip')
+    def energy_and_forces(graph: Graph):
+        mod = hkflax.lift(message_passing, name='e3x_mlip')
         return mod(graph.features, graph.positions)
 
+    # Initialize the optimizer
     opt = get_optimizer(FLAGS.learning_rate, FLAGS.gradient_clipping)
-    
-    # = optax.adam(1e-3)
 
     # Restore or initialize the model state
     state, start_epoch = restore_or_initialize_state(
-        key=init_key,
-        model=energy_and_forces_vmap,
+        key=config['init_key'],
+        model=energy_and_forces,
         opt=opt,
-        data=samples_train,
-        path=restore_checkpoint_dir,
-        n_devices=n_devices
+        data=config['samples_train'],
+        path=config['restore_checkpoint_dir'],
+        n_devices=config['n_devices']
     )
 
     # Set up paths and logging for training process
@@ -137,7 +107,7 @@ def main(argv):
     # Partial loss function with force weighting
     loss_fn_partial = partial(
         loss_fn_apply,
-        model_apply=energy_and_forces_vmap.apply,
+        model_apply=energy_and_forces.apply,
         forces_weight=FLAGS.forces_weight,
     )
 
@@ -147,8 +117,8 @@ def main(argv):
         run_scan(
             opt=opt,
             loss_fn_partial=loss_fn_partial,
-            samples_train=samples_train,
-            samples_valid=samples_valid,
+            samples_train=config['samples_train'],
+            samples_valid=config['samples_valid'],
             state=state,
             start_epoch=start_epoch,
             num_epochs=FLAGS.num_epochs,
@@ -165,8 +135,8 @@ def main(argv):
         run_pmap(
             opt=opt,
             loss_fn_partial=loss_fn_partial,
-            samples_train=samples_train,
-            samples_valid=samples_valid,
+            samples_train=config['samples_train'],
+            samples_valid=config['samples_valid'],
             state=state,
             start_epoch=start_epoch,
             num_epochs=FLAGS.num_epochs,
@@ -175,8 +145,8 @@ def main(argv):
             checkpoint_update_freq=FLAGS.checkpoint_update_freq,
             batch_size=FLAGS.batch_size,
             n_devices=n_devices,
-            pmap_axis_name=pmap_axis_name,
-            data_rng_key_generator=data_rng_key_generator,
+            pmap_axis_name=config['pmap_axis_name'],
+            data_rng_key_generator=config['data_rng_key_generator'],
             output_keys=FLAGS.output_keys,
         )
 
