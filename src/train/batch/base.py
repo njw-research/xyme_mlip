@@ -12,7 +12,7 @@ def setup_padded_reshaped_data(data: chex.ArrayTree,
 
     padding_amount = (interval_length - test_set_size % interval_length) % interval_length
     test_data_padded_size = test_set_size + padding_amount
-    test_data_padded = jax.tree_map(
+    test_data_padded = jax.tree.map(
         lambda x: jnp.concatenate([x, jnp.zeros((padding_amount, *x.shape[1:]), dtype=x.dtype)], axis=0), data
     )
     mask = jnp.zeros(test_data_padded_size, dtype=int).at[jnp.arange(test_set_size)].set(1)

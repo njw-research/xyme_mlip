@@ -102,81 +102,83 @@ def get_config(
 
     return  config_dict, n_devices
 
-def initalize_run(FLAGS):
-    # Get configuration dictionary and number of devices
-    config, n_devices = get_config(
-        FLAGS.script_dir,
-        FLAGS.data_dir,
-        FLAGS.dataset,
-        FLAGS.checkpoint_dir,
-        FLAGS.num_train,
-        FLAGS.num_valid
+
+
+class RunInitializer:
+    def __init__(self, FLAGS):
+        self.FLAGS = FLAGS
+        self._initialize_components()
+
+    def _get_config(self):
+        return get_config(
+            self.FLAGS.script_dir,
+            self.FLAGS.data_dir,
+            self.FLAGS.dataset,
+            self.FLAGS.checkpoint_dir,
+            self.FLAGS.num_train,
+            self.FLAGS.num_valid
         )
 
-    # Instantiate the message-passing model
-    message_passing = MessagePassing(
-        features=FLAGS.num_features,
-        max_degree=FLAGS.max_degree,
-        num_iterations=FLAGS.num_iterations,
-        num_basis_functions=FLAGS.num_basis_functions,
-        cutoff=FLAGS.cutoff,
-        max_atomic_number=FLAGS.max_atomic_number
-    )
+    def _instantiate_message_passing(self):
+        return MessagePassing(
+            features=self.FLAGS.num_features,
+            max_degree=self.FLAGS.max_degree,
+            num_iterations=self.FLAGS.num_iterations,
+            num_basis_functions=self.FLAGS.num_basis_functions,
+            cutoff=self.FLAGS.cutoff,
+            max_atomic_number=self.FLAGS.max_atomic_number
+        )
 
-    # Define energy and force computation with Haiku model transformation
-    @hk.without_apply_rng
-    @hk.transform
-    def energy_and_forces(graph: Graph):
-        mod = hkflax.lift(message_passing, name='e3x_mlip')
-        return mod(graph.features, graph.positions)
+    def _define_energy_and_forces(self):
+        message_passing = self._instantiate_message_passing()
+        @hk.without_apply_rng
+        @hk.transform
+        def energy_and_forces(graph: Graph):
+            mod = hkflax.lift(message_passing, name='e3x_mlip')
+            return mod(graph.features, graph.positions)
+        return energy_and_forces
 
-    # Initialize the optimizer
-    opt = get_optimizer(FLAGS.learning_rate, FLAGS.gradient_clipping)
+    def _initialize_optimizer(self):
+        return get_optimizer(self.FLAGS.learning_rate, self.FLAGS.gradient_clipping)
 
-    # Restore or initialize the model state
-    state, start_epoch = restore_or_initialize_state(
-        key=config['init_key'],
-        model=energy_and_forces,
-        opt=opt,
-        data=config['samples_train'],
-        path=config['restore_checkpoint_dir'],
-        n_devices=config['n_devices']
-    )
+    def _restore_or_initialize_state(self, config):
+        return restore_or_initialize_state(
+            key=config['init_key'],
+            model=self._define_energy_and_forces(),
+            opt=self._initialize_optimizer(),
+            data=config['samples_train'],
+            path=config['restore_checkpoint_dir'],
+            n_devices=config['n_devices']
+        )
 
-    # Set up paths and logging for training process
-    save_checkpoint_path = initialize_checkpoint_path(
-        state=state,
-        start_epoch=start_epoch,
-        num_epochs=FLAGS.num_epochs,
-        script_dir=FLAGS.script_dir,
-        logging_filename=FLAGS.logging_filename,
-        checkpoint_dir=FLAGS.checkpoint_dir
-    )
+    def _initialize_checkpoint_path(self, state, start_epoch):
+        return initialize_checkpoint_path(
+            state=state,
+            start_epoch=start_epoch,
+            num_epochs=self.FLAGS.num_epochs,
+            script_dir=self.FLAGS.script_dir,
+            logging_filename=self.FLAGS.logging_filename,
+            checkpoint_dir=self.FLAGS.checkpoint_dir
+        )
 
-    # Partial loss function with force weighting
-    loss_fn_partial = partial(
-        loss_fn_apply,
-        model_apply=energy_and_forces.apply,
-        forces_weight=FLAGS.forces_weight,
-    )
+    def _partial_loss_fn(self):
+        return partial(
+            loss_fn_apply,
+            model_apply=self._define_energy_and_forces().apply,
+            forces_weight=self.FLAGS.forces_weight,
+        )
 
-    return config, n_devices, state, start_epoch, save_checkpoint_path, opt, loss_fn_partial
+    def _initialize_components(self):
+        config, n_devices = self._get_config()
+        state, start_epoch = self._restore_or_initialize_state(config)
+        save_checkpoint_path = self._initialize_checkpoint_path(state, start_epoch)
+        opt = self._initialize_optimizer()
+        loss_fn_partial = self._partial_loss_fn()
 
-# class Run_Functions:
-#     def __init__(self., FLAGS):
-#         self.FLAGS = FLAGS
-#         self.config = None
-#         self.n_devices = None
-#         self.message_passing = None
-#         self.energy_and_forces = None
-#         self.opt = None
-#         self.state = None
-#         self.start_epoch = None
-#         self.save_checkpoint_path = None
-#         self.loss_fn_partial = None
-#         self.get_config()
-#         self.instantiate_model()
-#         self.define_model()
-#         self.init_optimizer()
-#         self.restore_or_initialize_state()
-#         self.initialize_training()
+        self.config = config
+        self.n_devices = n_devices
+        self.state = state
+        self.start_epoch = start_epoch
+        self.save_checkpoint_path = save_checkpoint_path
+        self.opt = opt
+        self.loss_fn_partial = loss_fn_partial

@@ -1,7 +1,8 @@
 # Import standard libraries
 import os
 from absl import logging, app, flags
-
+import pytest
+import shutil
 # Import custom libraries
 from src.run.base import RunInitializer
 from src.train.scan.run_scan import run_scan
@@ -17,11 +18,11 @@ flags.DEFINE_string('script_dir', os.path.dirname(os.path.abspath(__file__)), "S
 os.environ["XLA_FLAGS"] = "--xla_force_host_platform_device_count=1"
 
 # Training paramaters 
-flags.DEFINE_integer('num_epochs', 100, 'Number of training epochs.')
-flags.DEFINE_integer('num_train', 64, 'Number of training samples.')
-flags.DEFINE_integer('num_valid', 8, 'Number of validation samples.')
-flags.DEFINE_integer('batch_size', 4, 'Batch size for training.')
-flags.DEFINE_float('forces_weight', 10.0, "Weight on forces loss.")
+flags.DEFINE_integer('num_epochs', 4, 'Number of training epochs.')
+flags.DEFINE_integer('num_train', 4, 'Number of training samples.')
+flags.DEFINE_integer('num_valid', 2, 'Number of validation samples.')
+flags.DEFINE_integer('batch_size', 2, 'Batch size for training.')
+flags.DEFINE_float('forces_weight', 1.0, "Weight on forces loss.")
 flags.DEFINE_bool('last_iter_info_only', False, "Only use last batch for info.")
 flags.DEFINE_list('output_keys', ["grad_norm", "energy_mae", "forces_mae"], 'Output keys for logging.')
 
@@ -29,7 +30,7 @@ flags.DEFINE_list('output_keys', ["grad_norm", "energy_mae", "forces_mae"], 'Out
 flags.DEFINE_string('training_output_dir', './train_/', 'Directory for saving all model outputs.')
 flags.DEFINE_boolean('checkpointing_enabled', True, 'Enable checkpointing.')
 flags.DEFINE_string('checkpoint_dir', './checkpoint/', 'Directory for saving model checkpoints.')
-flags.DEFINE_integer('checkpoint_update_freq', 10, 'Frequency of checkpoint updating')
+flags.DEFINE_integer('checkpoint_update_freq', 2, 'Frequency of checkpoint updating')
 flags.DEFINE_string('logging_filename', './training.log', 'Log file for training progress.')
 flags.DEFINE_string('data_dir', './data/', 'Directory for datasets.')
 flags.DEFINE_string('dataset', 'md17_ethanol.npz', 'Name of the dataset file.')  #md17_ethanol.npz
@@ -91,6 +92,26 @@ def main(argv):
 
     print("Training complete. Well done!")
 
-# Run the training process
-if __name__ == '__main__':
-    app.run(main)
+def test_training_process():
+    """Test that the training process finishes correctly."""
+    try:
+        # Run the main function as if it were called from the command line
+        result = app.run(main)
+        result = None
+    except SystemExit as e:
+        print(e.code)
+        # Check if the system exits with a status code of 0, which indicates successful execution
+        assert e.code == None
+
+# Check that the output files exist and remove them
+def test_files_exist():
+    for output in ['train_0', 'train_samples.npz', 'valid_samples.npz']:  # List your output files here
+        path = os.path.join(FLAGS.script_dir, output)
+        assert os.path.exists(path)
+        
+        # Remove output files and directories after all tests are done
+        if os.path.isfile(path):
+            os.remove(path)
+        elif os.path.isdir(path):
+            shutil.rmtree(path)
+
