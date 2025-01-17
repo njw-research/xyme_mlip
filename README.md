@@ -39,6 +39,11 @@ To run the training script, use the following command
 PYTHONPATH=. python run_script/run_training.py
 ```
 
+## Next steps 
+
+- Padded batching to enbale data of variable lenght
+- More advanced optimizer
+- Only Nequip architecture is in place but this can be easily changed for Allegro or MACE
 
 ## Tips 
 
